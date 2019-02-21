@@ -1,14 +1,14 @@
 import os
 
-from flask import Flask
-from flask_socketio import SocketIO, emit
+from flask import Flask, render_template
+# from flask_socketio import SocketIO, emit
 
 # configure file to use flask and flask_socketio
 app = Flask(__name__)
-app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
-socketio = SocketIO(app)
+# app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
+# socketio = SocketIO(app)
 
 
 @app.route("/")
 def index():
-    return "Project 2: TODO"
+    return render_template("index.html")
