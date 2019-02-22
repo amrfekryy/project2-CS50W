@@ -8,6 +8,8 @@ app = Flask(__name__)
 # app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 # socketio = SocketIO(app)
 
+# remember display names
+display_names = []
 
 @app.route("/")
 def index():
