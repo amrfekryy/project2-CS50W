@@ -1,3 +1,172 @@
+@import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
+
 body {
-	background-color: lightgrey
+    font-family: 'Poppins', sans-serif;
+    background: #fff;
+}
+
+/* flexbox containing sidebar and chat interface */
+.wrapper {
+    display: flex;
+    width: 100%;
+    align-items: stretch;
+}
+
+/* sidebar style when appearing */
+#sidebar {
+    min-width: 220px;
+    max-width: 220px;
+    min-height: 100vh;
+    background: #01445A;
+    color: lightgrey;
+    transition: all 0.3s;
+}
+
+#sidebar .sidebar-header {
+    padding: 10px;
+    text-align: center;
+    background: #003d51;
+    height: 60px;
+}
+.channels-head a {
+  color: lightgrey; 
+  font-weight: lighter; 
+  font-size: smaller; 
+  margin-left: 60px
+}
+.channels-head, .users-head {
+  padding: 20px;
+  padding-bottom: 10px;
+  font-weight: bolder;
+}
+.channels-list, .users-list {
+  overflow-y: auto;
+  height: 169px;
+}
+.channels-list ul, .users-list ul {
+  padding-left: 0px;
+}      
+.channels-list ul {
+  list-style: inside url("../static/images/list_icon.png");
+}
+.channel-li:hover {
+  list-style: inside url("../static/images/list_icon_white.png");
+}
+.channels-list ul li, .users-list ul li{
+  padding-left: 20px;
+  transition: 0.3s;
+}
+.users-list ul {
+  list-style: inside url("../static/images/yellow_user.png");
+}
+.user-li:hover {
+  list-style: inside url("../static/images/red_user.png");
+}      
+#sidebar li:hover {
+  background-color: #003d51;
+  color: white;
+  padding-left: 25px;
+}
+#sidebarCollapse {
+  color: #01445A;
+  width: 60px;
+  height: 60px;
+  text-align: center;
+  padding:20px 0;
+}
+#sidebarCollapse:hover {
+  background-color: #01445A;
+  color: #fff;
+}
+
+#content .content-head {
+  height: 60px; 
+  border-bottom: 1px solid grey
+}
+#channel-name {
+  color: grey
+}
+#msg-input {
+  color: #000;
+  border: 2px solid grey;
+  /*background-color: inherit;*/
+}
+
+#msg-btn {
+  border: 2px solid grey; 
+  background-color: inherit; 
+  color: grey;
+}
+#msg-btn:hover { 
+  background-color: #003d51; 
+}
+
+.message {
+  background-color: lightgrey; 
+  padding: 10px; 
+  margin: 10px 0; 
+  border-radius: 5px; 
+  word-wrap: break-word;
+}
+.message .avatar {
+  display: inline-block; 
+  width: 40px; 
+  height: 40px;
+}
+.message .name {
+  display: inline-block;
+}
+.message .text {
+  padding-left: 45px; 
+  margin-top: -8px;
+}
+#msg-body {
+  height: 80vh; 
+  margin: 0; 
+  overflow-y: auto
+}
+
+
+/* Media Queries */
+
+/* for small screens, sidebar is hidden by default, and appears when toggled. */
+@media (max-width: 768px) {
+    #sidebar {
+      margin-left: -220px;
+      z-index: 2;
+    }
+    #sidebar.active {
+      margin-left: 0;
+      z-index: 2;
+    }
+    #content {
+      margin-left: 0;
+      transition: 0.3s;
+      z-index: 1;
+    }
+    #content.active {
+      margin-left: -220px;
+      z-index: 1;
+    }
+    #sidebarCollapse {
+      margin-left: 0;
+      transition: 0.3s;
+      z-index: 2;
+    }
+    #sidebarCollapse.active {
+      margin-left: 220px;
+      z-index: 2;
+    }
+    #channel-name.active {
+      visibility: hidden;
+    }
+}
+/* for big screens, sidebar is visible by default, and no toggling bottun */
+@media (min-width: 768px) {
+    #sidebar {
+        margin-left: 0px;
+    }
+    #sidebarCollapse {
+        visibility: hidden;
+    }
 }

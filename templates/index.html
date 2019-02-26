@@ -1,35 +1,138 @@
-{% extends "main_layout.html" %}
+{% extends "layout.html" %}
 
-{% block title %}
-    Welcome to Flack
-{% endblock %}
+{% block body %}
 
-
-{% block main_body %}
-  <!-- HEADER -->
-	<div class="row justify-content-center mt-5">
-		<h3 calss="col-lg-6 col-sm-12" style="margin-right: 10px">
-      Welcome to Flack
-    </h3>
-    <h3>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered" role="document">    
+<div class="modal-content">
+      
+  <!-- header -->
+  <div class="modal-header" style="text-align: center;">
+    <h3 class="modal-title mr-auto ml-auto" id="exampleModalLabel">
+      Welcome to Flack<br>
       <small class="text-muted">Live anonymous chat app</small>
     </h3>
   </div>
   
-  <!-- FORM -->
-  <form id="start_form" class="row justify-content-center mt-3" style="max-width: 500px; margin: 0 auto">
-    <input id="display_name" name="display_name" type="text" autocomplete="none" class="col-sm-4 col-xs-12 form-control" placeholder="Display name" style="max-width: 220px">
-    <select id="msg_bg" name="msg_bg" class="col-sm-4 col-xs-12 custom-select" style="max-width: 220px">
-      <option selected hidden value="">Message color</option>
-      <option value="green" style="background-color: #ADCAC0">Green</option>
-      <option value="pink" style="background-color: #E0B1BB">Pink</option>
-    </select>
-    <button class="col-sm-4 col-xs-12 btn btn-warning" style="max-width: 220px">Start Chatting</button>
-  </form>
+  <!-- body -->
+  <div class="modal-body row justify-content-center">
+    <form id="start_form">
+      <!-- display name input -->
+      <input id="display_name" name="display_name" type="text" autocomplete="none" class="form-control" placeholder="Display name" style="width: 250px">
 
-  <!-- IMAGE -->
-  <div class="row mt-5">
-    <!-- https://undraw.co/search?q=chat -->
-    <img class="col col-lg-6 col-md-8 col-sm-12 align-self-center" src="{{ url_for('static', filename='images/begin_chat.svg') }}" style="margin: 0 auto">
+      <!-- avatar dropup -->
+      <input id="avatar_number" name="avatar_number" value="default" style="display: none"></input>
+      <div class="btn-group dropup mt-3">
+        <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="width: 250px">
+          <img id="avatar_selection" data-value="" src="../static/images/avatars/default.png"> <span id="avatar_selection_btn">avatar</span>
+        </button>
+        <div class="dropdown-menu" style="width: 300px; text-align: center">
+          {% for i in range(1,14) %}
+          <img class="avatar_option" data-value="{{i}}" src="../static/images/avatars/{{i}}.png">
+          {% endfor %}
+        </div>
+      </div>
+
+    </form>
   </div>
+  
+  <!-- footer -->
+  <div class="modal-footer justify-content-center">
+    <button form="start_form" class="btn btn-warning" style="width: 250px">Start Chatting</button>
+  </div>
+
+</div>
+</div>
+</div>
+
+<!-- Chat Page -->
+<div class="wrapper">
+
+  <!-- Sidebar -->
+  <nav id="sidebar">
+
+    <div class="sidebar-header">
+      <h5>Hello {{ username }}</h5>
+    </div>
+    
+    <div class="channels-head">
+      Channels 
+      <a>add</a>
+    </div>
+    <div class="channels-list">
+      <ul>
+        <li class="channel-li">fsds</li>
+        <li class="channel-li">sdfsd</li>
+        <li class="channel-li">fsdfsd</li>
+        <li class="channel-li">fdsf</li>
+        <li class="channel-li">fsdfsd</li>
+        <li class="channel-li">fsds</li>
+        <li class="channel-li">sdfsd</li>
+        <li class="channel-li">fsdfsd</li>
+        <li class="channel-li">fdsf</li>
+        <li class="channel-li">fsdfsd</li>
+      </ul>
+    </div>
+
+    <hr>
+    
+    <div class="users-head">
+      Users
+    </div>
+    <div class="users-list">
+      <ul>
+        <li class="user-li">fsds</li>
+        <li class="user-li">sdfsd</li>
+        <li class="user-li">fsdfsd</li>
+        <li class="user-li">fdsf</li>
+        <li class="user-li">fsdfsd</li>
+      </ul>
+    </div>
+   
+  </nav>
+
+  <!-- Page Content -->
+  <div id="content" class="container-fluid">
+    
+    <!-- head section -->
+    <div class="row content-head">
+      <div id="sidebarCollapse" title="toggle sidebar">
+        <i class="fas fa-align-center"></i>
+        <!-- <span>Toggle Sidebar</span> -->
+      </div>
+      <div id="channel-name" class="col align-self-center">
+        <h4>Channel name</h4>
+      </div>
+    </div>
+    
+    <!-- messages section -->
+    <div id="msg-body" class="row justify-content-center">
+      <div class="col-11 align-self-end" style="padding: 0;">
+
+        <div class="message">
+          <img class="avatar" src="../static/images/avatars/9.png">
+          <strong class="name">username</strong>
+          <div class="text">
+            hsdkjhf sdghfkjhsd dsgfjdg dfhdjsgfjf d fgsdhgf
+          </div>
+        </div>
+
+      </div>
+    </div>
+    
+    <!-- message input section -->
+    <div class="row form-group mt-2 justify-content-center align-items-end" style="margin: 0">
+      <div class="col-11 input-group mb-3" style="padding: 0">
+        <input id="msg-input" type="text" class="form-control msg-element">
+        <div class="input-group-append">
+          <button class="btn msg-element" id="msg-btn">Send</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div> 
 {% endblock %}
+
