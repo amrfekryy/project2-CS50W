@@ -1,0 +1,417 @@
+<!-- https://bootstrapious.com/p/bootstrap-sidebar#1-static-collapsible-sidebar-menu -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Flack: live anonymous chat app</title>
+
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+
+    <!-- Font Awesome JS -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
+    
+    <!-- Our Custom CSS -->
+    <style>
+
+      @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
+
+      body {
+          font-family: 'Poppins', sans-serif;
+          background: #fff;
+      }
+
+      /* flexbox containing sidebar and chat interface */
+      .wrapper {
+          display: flex;
+          width: 100%;
+          align-items: stretch;
+      }
+      
+      /* sidebar style when appearing */
+      #sidebar {
+          min-width: 220px;
+          max-width: 220px;
+          min-height: 100vh;
+          background: #01445A;
+          color: lightgrey;
+          transition: all 0.3s;
+      }
+
+      #sidebar .sidebar-header {
+          padding: 10px;
+          text-align: center;
+          background: #003d51;
+          height: 60px;
+      }
+      .channels-head, .users-head {
+        padding: 20px;
+        padding-bottom: 10px;
+        font-weight: bolder;
+      }
+      .channels-list, .users-list {
+        overflow-y: auto;
+        height: 169px;
+      }
+      .channels-list ul, .users-list ul {
+        padding-left: 0px;
+      }      
+      .channels-list ul {
+        list-style: inside url("../static/images/list_icon.png");
+      }
+      .channel-li:hover {
+        list-style: inside url("../static/images/list_icon_white.png");
+      }
+      .channels-list ul li, .users-list ul li{
+        padding-left: 20px;
+        transition: 0.3s;
+      }
+      .users-list ul {
+        list-style: inside url("../static/images/yellow_user.png");
+      }
+      .user-li:hover {
+        list-style: inside url("../static/images/red_user.png");
+      }      
+      #sidebar li:hover {
+        background-color: #003d51;
+        color: white;
+        padding-left: 25px;
+      }
+      #sidebarCollapse {
+        color: #01445A;
+        width: 60px;
+        height: 60px;
+        text-align: center;
+        padding:20px 0;
+      }
+      #sidebarCollapse:hover {
+        background-color: #01445A;
+        color: #fff;
+      }
+      
+      #msg-input {
+        color: #000;
+        border: 2px solid grey;
+        /*background-color: inherit;*/
+      }
+
+      #msg-btn {
+        border: 2px solid grey; 
+        background-color: inherit; 
+        color: grey;
+      }
+      #msg-btn:hover { 
+        background-color: #003d51; 
+      }
+      
+      .message {
+        background-color: lightgrey; 
+        padding: 10px; 
+        margin: 10px 0; 
+        border-radius: 5px; 
+        word-wrap: break-word;
+      }
+
+
+      /* Media Queries */
+
+      /* for small screens, sidebar is hidden by default, and appears when toggled. */
+      @media (max-width: 768px) {
+          #sidebar {
+            margin-left: -220px;
+            z-index: 2;
+          }
+          #sidebar.active {
+            margin-left: 0;
+            z-index: 2;
+          }
+          #content {
+            margin-left: 0;
+            transition: 0.3s;
+            z-index: 1;
+          }
+          #content.active {
+            margin-left: -220px;
+            z-index: 1;
+          }
+          #sidebarCollapse {
+            margin-left: 0;
+            transition: 0.3s;
+            z-index: 2;
+          }
+          #sidebarCollapse.active {
+            margin-left: 220px;
+            z-index: 2;
+          }
+          #channel-name.active {
+            visibility: hidden;
+          }
+      }
+      /* for small screens, sidebar is visible by default, and no toggling bottun */
+      @media (min-width: 768px) {
+          #sidebar {
+              margin-left: 0px;
+          }
+          #sidebarCollapse {
+              visibility: hidden;
+          }
+      }
+
+    </style>
+</head>
+
+<body>
+<div class="wrapper">
+
+  <!-- Sidebar -->
+  <nav id="sidebar">
+
+    <div class="sidebar-header">
+      <h5>Hello {{ username }}</h5>
+    </div>
+    
+    <div class="channels-head">
+      Channels 
+      <a href="" style="color: lightgrey; font-weight: lighter; font-size: smaller; margin-left: 60px">
+      add
+      </a>
+    </div>
+    <div class="channels-list">
+      <ul>
+        <li class="channel-li">fsds</li>
+        <li class="channel-li">sdfsd</li>
+        <li class="channel-li">fsdfsd</li>
+        <li class="channel-li">fdsf</li>
+        <li class="channel-li">fsdfsd</li>
+        <li class="channel-li">fsds</li>
+        <li class="channel-li">sdfsd</li>
+        <li class="channel-li">fsdfsd</li>
+        <li class="channel-li">fdsf</li>
+        <li class="channel-li">fsdfsd</li>
+      </ul>
+    </div>
+
+    <hr>
+    
+    <div class="users-head">
+      Users
+    </div>
+    <div class="users-list">
+      <ul>
+        <li class="user-li">fsds</li>
+        <li class="user-li">sdfsd</li>
+        <li class="user-li">fsdfsd</li>
+        <li class="user-li">fdsf</li>
+        <li class="user-li">fsdfsd</li>
+      </ul>
+    </div>
+   
+  </nav>
+
+  <!-- Page Content -->
+  <div id="content" class="container-fluid">
+    
+    <!-- head section -->
+    <div class="row" style="height: 60px; border-bottom: 1px solid grey">
+      <div id="sidebarCollapse" title="toggle sidebar">
+        <i class="fas fa-align-center"></i>
+        <!-- <span>Toggle Sidebar</span> -->
+      </div>
+      <div id="channel-name" class="col align-self-center" style="color: grey">
+        <h4>Channel name</h4>
+      </div>
+    </div>
+    
+    <!-- messages section -->
+    <div id="msg-body" class="row justify-content-center" style="height: 80vh; margin: 0; overflow-y: auto">
+      <div class="col-11 align-self-end" style="padding: 0;">
+
+        <div class="message">
+          <img class="avatar" src="../static/images/avatars/7.png" style="display: inline-block; width: 40px; height: 40px">
+          <strong style="display: inline-block;">username</strong>
+          <div style="padding-left: 45px; margin-top: -8px">
+            hsdkjhf sdghfkjhsd dsgfjdg dfhdjsgfjf d fgsdhgf
+          </div>
+        </div>
+        <div class="message">
+          <img class="avatar" src="../static/images/avatars/9.png" style="display: inline-block; width: 40px; height: 40px">
+          <strong style="display: inline-block;">username</strong>
+          <div style="padding-left: 45px; margin-top: -8px">
+            hsdkjhf sdghfkjhsd dsgfjdg dfhdjsgfjf d fgsdhgf
+          </div>
+        </div>
+        <div class="message">
+          <img class="avatar" src="../static/images/avatars/12.png" style="display: inline-block; width: 40px; height: 40px">
+          <strong style="display: inline-block;">username</strong>
+          <div style="padding-left: 45px; margin-top: -8px">
+            hsdkjhf sdghfkjhsd dsgfjdg dfhdjsgfjf d fgsdhgf
+          </div>
+        </div>
+        <div class="message">
+          <img class="avatar" src="../static/images/avatars/7.png" style="display: inline-block; width: 40px; height: 40px">
+          <strong style="display: inline-block;">username</strong>
+          <div style="padding-left: 45px; margin-top: -8px">
+            hsdkjhf sdghfkjhsd dsgfjdg dfhdjsgfjf d fgsdhgf
+          </div>
+        </div>
+        <div class="message">
+          <img class="avatar" src="../static/images/avatars/9.png" style="display: inline-block; width: 40px; height: 40px">
+          <strong style="display: inline-block;">username</strong>
+          <div style="padding-left: 45px; margin-top: -8px">
+            hsdkjhf sdghfkjhsd dsgfjdg dfhdjsgfjf d fgsdhgf
+          </div>
+        </div>
+        <div class="message">
+          <img class="avatar" src="../static/images/avatars/1.png" style="display: inline-block; width: 40px; height: 40px">
+          <strong style="display: inline-block;">username</strong>
+          <div style="padding-left: 45px; margin-top: -8px">
+            hsdkjhf sdghfkjhsd dsgfjdg dfhdjsgfjf d fgsdhgf
+          </div>
+        </div>
+        <div class="message">
+          <img class="avatar" src="../static/images/avatars/2.png" style="display: inline-block; width: 40px; height: 40px">
+          <strong style="display: inline-block;">username</strong>
+          <div style="padding-left: 45px; margin-top: -8px">
+            hsdkjhf sdghfkjhsd dsgfjdg dfhdjsgfjf d fgsdhgf
+          </div>
+        </div>
+        <div class="message">
+          <img class="avatar" src="../static/images/avatars/3.png" style="display: inline-block; width: 40px; height: 40px">
+          <strong style="display: inline-block;">username</strong>
+          <div style="padding-left: 45px; margin-top: -8px">
+            hsdkjhf sdghfkjhsd dsgfjdg dfhdjsgfjf d fgsdhgf
+          </div>
+        </div>
+        <div class="message">
+          <img class="avatar" src="../static/images/avatars/4.png" style="display: inline-block; width: 40px; height: 40px">
+          <strong style="display: inline-block;">username</strong>
+          <div style="padding-left: 45px; margin-top: -8px">
+            hsdkjhf sdghfkjhsd dsgfjdg dfhdjsgfjf d fgsdhgf
+          </div>
+        </div>
+        <div class="message">
+          <img class="avatar" src="../static/images/avatars/5.png" style="display: inline-block; width: 40px; height: 40px">
+          <strong style="display: inline-block;">username</strong>
+          <div style="padding-left: 45px; margin-top: -8px">
+            hsdkjhf sdghfkjhsd dsgfjdg dfhdjsgfjf d fgsdhgf
+          </div>
+        </div>
+        <div class="message">
+          <img class="avatar" src="../static/images/avatars/6.png" style="display: inline-block; width: 40px; height: 40px">
+          <strong style="display: inline-block;">username</strong>
+          <div style="padding-left: 45px; margin-top: -8px">
+            hsdkjhf sdghfkjhsd dsgfjdg dfhdjsgfjf d fgsdhgf
+          </div>
+        </div>
+        <div class="message">
+          <img class="avatar" src="../static/images/avatars/7.png" style="display: inline-block; width: 40px; height: 40px">
+          <strong style="display: inline-block;">username</strong>
+          <div style="padding-left: 45px; margin-top: -8px">
+            hsdkjhf sdghfkjhsd dsgfjdg dfhdjsgfjf d fgsdhgf
+          </div>
+        </div>
+        <div class="message">
+          <img class="avatar" src="../static/images/avatars/8.png" style="display: inline-block; width: 40px; height: 40px">
+          <strong style="display: inline-block;">username</strong>
+          <div style="padding-left: 45px; margin-top: -8px">
+            hsdkjhf sdghfkjhsd dsgfjdg dfhdjsgfjf d fgsdhgf
+          </div>
+        </div>
+        <div class="message">
+          <img class="avatar" src="../static/images/avatars/9.png" style="display: inline-block; width: 40px; height: 40px">
+          <strong style="display: inline-block;">username</strong>
+          <div style="padding-left: 45px; margin-top: -8px">
+            hsdkjhf sdghfkjhsd dsgfjdg dfhdjsgfjf d fgsdhgf
+          </div>
+        </div>
+        <div class="message">
+          <img class="avatar" src="../static/images/avatars/10.png" style="display: inline-block; width: 40px; height: 40px">
+          <strong style="display: inline-block;">username</strong>
+          <div style="padding-left: 45px; margin-top: -8px">
+            hsdkjhf sdghfkjhsd dsgfjdg dfhdjsgfjf d fgsdhgf
+          </div>
+        </div>
+
+      </div>
+    </div>
+    
+    <!-- message input section -->
+    <div class="row form-group mt-2 justify-content-center align-items-end" style="margin: 0">
+      <div class="col-11 input-group mb-3" style="padding: 0">
+        <input id="msg-input" type="text" class="form-control msg-element">
+        <div class="input-group-append">
+          <button class="btn msg-element" id="msg-btn">Send</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div> 
+
+
+<!-- jQuery CDN - Slim version (=without AJAX) -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<!-- Popper.JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+<!-- Bootstrap JS -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+
+
+
+<script>
+
+// EC6 toggle        
+document.addEventListener('DOMContentLoaded', () => {
+  
+  // document.querySelectorAll('.channel-li').forEach( li => {       
+    
+  //   li.onmouseover = () => {
+  //     li.style.listStyle = "inside url('../static/images/list_icon_white.png')";
+  //   };
+
+  //   li.onmouseout = () => {
+  //     li.style.listStyle = "inside url('../static/images/list_icon.png')";
+  //   };
+
+  // });
+
+  document.querySelector('#sidebarCollapse').onclick = () => {
+    document.querySelector('#sidebar').classList.toggle('active');
+    document.querySelector('#content').classList.toggle('active');
+    document.querySelector('#sidebarCollapse').classList.toggle('active');
+    document.querySelector('#channel-name').classList.toggle('active');
+  };
+
+  document.querySelectorAll('.msg-element').forEach( msg_element => {
+    msg_element.onfocus = () => {
+    document.querySelector('#msg-input').style.borderColor = "#01445A";
+    document.querySelector('#msg-btn').style.borderColor = "#01445A";
+    document.querySelector('#msg-btn').style.color = "#fff";
+    document.querySelector('#msg-btn').style.backgroundColor = "#01445A";
+    };
+  });
+  document.querySelectorAll('.msg-element').forEach( msg_element => {
+    msg_element.onfocusout = () => {
+    document.querySelector('#msg-input').style.borderColor = "grey";
+    document.querySelector('#msg-btn').style.borderColor = "grey";
+    document.querySelector('#msg-btn').style.color = "grey";
+    document.querySelector('#msg-btn').style.backgroundColor = "inherit";
+    };
+  });
+  // keep messages scroll at bottom
+  var messageBody = document.querySelector('#msg-body');
+  messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
+
+
+});
+  
+</script>
+</body>
+</html>
