@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 
+
 {% block body %}
 
 <!-- Modal -->
@@ -17,7 +18,7 @@
   
   <!-- body -->
   <div class="modal-body row justify-content-center">
-    <form id="start_form">
+    <form id="start_form" action="{{ url_for('index') }}" method="post">
       <!-- display name input -->
       <input id="display_name" name="display_name" type="text" autocomplete="none" class="form-control" placeholder="Display name" style="width: 250px">
       <div id="display_name_feedback"></div>
@@ -47,6 +48,7 @@
 </div>
 </div>
 
+
 <!-- ------------------------------- -->
 
 <!-- Chat Page -->
@@ -56,7 +58,10 @@
   <nav id="sidebar">
 
     <div class="sidebar-header">
-      <h5>Hello {{ username }}</h5>
+      {% if session.get('display_name') %}
+      <img class="avatar" src="../static/images/avatars/{{ session.get('avatar_number') }}.png">
+      <strong class="name">{{ session.get('display_name') }}</strong>
+      {% endif %}
     </div>
     
     <div class="channels-head">
@@ -117,9 +122,17 @@
 
         <div class="message">
           <img class="avatar" src="../static/images/avatars/9.png">
-          <strong class="name">username</strong>
+          <strong class="name">Amr Fekry</strong>
           <div class="text">
-            hsdkjhf sdghfkjhsd dsgfjdg dfhdjsgfjf d fgsdhgf
+            Hello
+            {% if session.get('display_name') %} 
+              {{ session.get('display_name') }}!
+            {% else %}
+              there!
+            {% endif %}
+            welcome to Flack. <br> <br>
+            You can join a group chat by clicking on any channel, or you can start your own channel. <br>
+            You can also start a private chat between you and any other user.  
           </div>
         </div>
 
@@ -138,6 +151,5 @@
 
   </div>
 
-</div> 
+</div>
 {% endblock %}
-

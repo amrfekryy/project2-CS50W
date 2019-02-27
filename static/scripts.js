@@ -1,9 +1,11 @@
        
 document.addEventListener('DOMContentLoaded', () => {
 
-  // disable esc/click exit and show modal
-  $('#exampleModal').modal({keyboard: false, backdrop: 'static'})
-  $('#exampleModal').modal('show')
+  // if new user
+  if (!localStorage.getItem('display_name')) {
+    // show modal with esc/click exit disabled
+    $('#exampleModal').modal({keyboard: false, backdrop: 'static'})    
+  }
 
   // keep messages scroll at bottom
   var messageBody = document.querySelector('#msg-body');
@@ -73,7 +75,12 @@ document.addEventListener('DOMContentLoaded', () => {
       if (display_name.classList.contains('is-invalid')) {
           invalid_name = true;
       }
-      if (invalid_name) {return false;} else {return true;};
+      if (invalid_name) {
+        return false;
+      } else {
+        localStorage.setItem('display_name', display_name.value);
+        return true;
+      };
   };
 
 
