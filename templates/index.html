@@ -66,20 +66,13 @@
     
     <div class="channels-head">
       Channels 
-      <a>add</a>
+      <a href="">add</a>
     </div>
     <div class="channels-list">
       <ul>
-        <li class="channel-li">fsds</li>
-        <li class="channel-li">sdfsd</li>
-        <li class="channel-li">fsdfsd</li>
-        <li class="channel-li">fdsf</li>
-        <li class="channel-li">fsdfsd</li>
-        <li class="channel-li">fsds</li>
-        <li class="channel-li">sdfsd</li>
-        <li class="channel-li">fsdfsd</li>
-        <li class="channel-li">fdsf</li>
-        <li class="channel-li">fsdfsd</li>
+        {% for channel in app_storage["channels"] %}
+          <li class="channel-li">{{ channel["name"] }}</li>
+        {% endfor %}
       </ul>
     </div>
 
@@ -90,11 +83,11 @@
     </div>
     <div class="users-list">
       <ul>
-        <li class="user-li">fsds</li>
-        <li class="user-li">sdfsd</li>
-        <li class="user-li">fsdfsd</li>
-        <li class="user-li">fdsf</li>
-        <li class="user-li">fsdfsd</li>
+        <!-- fix old usernames displayed after cookie deleted
+ -->
+        {% for user in app_storage["users"] %}
+          <li class="user-li">{{ user["name"] }}</li>
+        {% endfor %}
       </ul>
     </div>
    

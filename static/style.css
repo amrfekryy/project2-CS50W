@@ -62,7 +62,7 @@ body {
   transition: 0.3s;
 }
 .users-list ul {
-  list-style: inside url("../static/images/yellow_user.png");
+  list-style: inside url("../static/images/green_user.png");
 }
 .user-li:hover {
   list-style: inside url("../static/images/red_user.png");

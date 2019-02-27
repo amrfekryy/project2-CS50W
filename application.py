@@ -14,8 +14,24 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-# remember display names
-users = ["amr"]
+# a global variable to store common data
+app_storage = {
+
+	"channels": [
+		{
+			"name": "egypt", 
+			"messages": [
+		 		{"user": "","time": "", "message": ""}
+			]
+		},
+	],
+
+	"users": [
+		{"name": "amr", "status": "free"},
+		{"name": "amr", "status": "free"},
+		{"name": "amr", "status": "free"}
+	]
+}
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -24,12 +40,12 @@ def index():
 		display_name = request.form.get("display_name")
 		avatar_number = request.form.get("avatar_number")
 		
-		users.append(display_name)
+		app_storage["users"].append({"name": display_name, "status": "free"})
 
 		session["display_name"] = display_name
 		session["avatar_number"] = avatar_number
 	
-	return render_template("index.html", session=session)
+	return render_template("index.html", session=session, app_storage=app_storage)
 
 @app.route("/validate_name", methods=["POST"])
 def validate_name():
@@ -38,8 +54,8 @@ def validate_name():
     display_name = request.form.get("display_name")
 
     # check if display_name is available
-    if display_name in users:
-        return jsonify({"name_available": False})
-
+    for user in app_storage["users"]:
+    	if display_name == user["name"]:
+        	return jsonify({"name_available": False})
     return jsonify({"name_available": True})
 
