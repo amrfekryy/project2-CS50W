@@ -73,6 +73,11 @@ def index():
 		
 		# if adding a new channel
 		else:
+			# compare channel name to existing names
+			for existing_channel_name in app_storage.channels:
+				if existing_channel_name == new_channel_name:
+					return "channel already exists!"
+			# channel name is new
 			new_channel = Channel(new_channel_name)
 			app_storage.channels[new_channel_name] = new_channel
 			session["current_channel"] = new_channel
