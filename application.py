@@ -46,9 +46,13 @@ for i in range(4):
 @app.route("/", methods=["GET", "POST"])
 def index():
 	if request.method == "POST":
+		# get "potential" inputs
 		display_name = request.form.get("display_name")
 		avatar_number = request.form.get("avatar_number")
 		message = request.form.get("message")
+		new_channel_name= request.form.get("new_channel_name")
+		
+		# see if it is the start-form
 		if display_name:
 			app_storage.users.append(User(name=display_name, status=""))
 
@@ -56,7 +60,9 @@ def index():
 			session["avatar_number"] = avatar_number
 			
 			create_welcome_channel()
-		else:
+		
+		# see if it is a new message
+		elif message:
 			message = Message(
 				avatar_number=session["avatar_number"],
 				username=session.get("display_name"), 
@@ -64,7 +70,12 @@ def index():
 				text=message)
 			# add the message to the current channel
 			session["current_channel"].messages.append(message)
-
+		
+		# if adding a new channel
+		else:
+			new_channel = Channel(new_channel_name)
+			app_storage.channels[new_channel_name] = new_channel
+			session["current_channel"] = new_channel
 
 	return render_template("index.html", session=session, app_storage=app_storage)
 

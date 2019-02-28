@@ -142,7 +142,9 @@
         <!-- <span>Toggle Sidebar</span> -->
       </div>
       <div id="channel-name" class="col align-self-center">
+        {% if session.get('display_name') %}
         <h4><i>{{ session["current_channel"].name }}</i></h4>
+        {% endif %}
       </div>
     </div>
     
