@@ -116,27 +116,29 @@
     <div id="msg-body" class="row justify-content-center">
       <div class="col-11 align-self-end" style="padding: 0;">
 
-        <div class="message">
-          <img class="avatar" src="../static/images/avatars/9.png">
-          <strong class="name">Amr Fekry</strong>
-          <div class="text">
-            {% if session.get('display_name') %}
-              {{ session["welcome_channel"].messages[0].text }}
-            {% endif %}
+        {% if session.get('display_name') %}
+          {% for message in session["current_channel"].messages %}
+          <div class="message">
+            <img class="avatar" src="../static/images/avatars/{{ message.avatar_number }}.png">
+            <strong class="name">{{ message.username }}</strong>
+            <div class="text">
+              {{ message.text }}
+            </div>
           </div>
-        </div>
+          {% endfor %}
+        {% endif %}
 
       </div>
     </div>
     
     <!-- message input section -->
     <div class="row form-group mt-2 justify-content-center align-items-end" style="margin: 0">
-      <div class="col-11 input-group mb-3" style="padding: 0">
-        <input id="msg-input" type="text" class="form-control msg-element">
+      <form action="{{ url_for('index') }}" method="post" class="col-11 input-group mb-3" style="padding: 0">
+        <input name="message" id="msg-input" type="text" class="form-control msg-element">
         <div class="input-group-append">
           <button class="btn msg-element" id="msg-btn">Send</button>
         </div>
-      </div>
+      </form>
     </div>
 
   </div>

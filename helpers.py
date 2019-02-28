@@ -10,7 +10,8 @@ class Channel():
 		self.messages = []
 
 class Message():
-	def __init__(self, username, time, text):
+	def __init__(self, avatar_number, username, time, text):
+		self.avatar_number = avatar_number
 		self.username = username
 		self.time = time
 		self.text = text

@@ -30,13 +30,12 @@ def create_welcome_channel():
 	You can join a group chat by clicking on any channel, or you can start your own channel. 
 	You can also start a private chat between you and any other user.
 	"""
-	welcome_message = Message(username="Amr Fekry", time="", text=msg)
+	welcome_message = Message(avatar_number=1 , username="Amr Fekry", time="", text=msg)
 	# add message to channel
 	welcome_channel.messages.append(welcome_message)
 	# add channel to storage
 	session["welcome_channel"] = welcome_channel
-
-
+	session["current_channel"] = welcome_channel
 
 # add some users
 for i in range(4):
@@ -49,15 +48,26 @@ def index():
 	if request.method == "POST":
 		display_name = request.form.get("display_name")
 		avatar_number = request.form.get("avatar_number")
-		
-		app_storage.users.append(User(name=display_name, status=""))
+		message = request.form.get("message")
+		if display_name:
+			app_storage.users.append(User(name=display_name, status=""))
 
-		session["display_name"] = display_name
-		session["avatar_number"] = avatar_number
-		
-		create_welcome_channel()
+			session["display_name"] = display_name
+			session["avatar_number"] = avatar_number
+			
+			create_welcome_channel()
+		else:
+			message = Message(
+				avatar_number=session["avatar_number"],
+				username=session.get("display_name"), 
+				time="", 
+				text=message)
+			# add the message to the current channel
+			session["current_channel"].messages.append(message)
+
 
 	return render_template("index.html", session=session, app_storage=app_storage)
+
 
 @app.route("/validate_name", methods=["POST"])
 def validate_name():
