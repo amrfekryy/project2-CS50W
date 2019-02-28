@@ -3,7 +3,10 @@
 
 {% block body %}
 
-<!-- Modal -->
+<!-- --------------MODALS----------------- -->
+
+
+<!-- Start Form Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 <div class="modal-dialog modal-dialog-centered" role="document">    
 <div class="modal-content">
@@ -48,8 +51,35 @@
 </div>
 </div>
 
-
 <!-- ------------------------------- -->
+
+
+<!-- Add Channel Modal -->
+<div class="modal fade" id="add_channel_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered" role="document">
+<div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title pl-3 mr-auto ml-auto">add a new channel</h5>
+      <button type="button" class="close ml-0" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body row justify-content-center">
+      <form id="add_channel_form" action="{{ url_for('index') }}" method="post">
+        <!-- display name input -->
+        <input id="new_channel_name" name="new_channel_name" type="text" autocomplete="none" class="form-control" placeholder="Channel name" style="width: 250px">
+        <div id="new_channel_name_feedback"></div>
+      </form>
+    </div>
+    <div class="modal-footer justify-content-center">
+      <button form="add_channel_form" class="btn btn-warning" style="width: 250px">Add</button>
+    </div>
+</div>
+</div>
+</div>
+
+<!-- --------------END-MODALS----------------- -->
+
 
 <!-- Chat Page -->
 <div class="wrapper">
@@ -66,7 +96,11 @@
     
     <div class="channels-head">
       Channels 
-      <a href="">add</a>
+      <a title="add a new channel" data-toggle="modal" data-target="#add_channel_modal">
+        <span class="add-icon">
+          <i class="fas fa-plus-circle fa-lg"></i>
+        </span>
+      </a>
     </div>
     <div class="channels-list">
       <ul>
@@ -108,7 +142,7 @@
         <!-- <span>Toggle Sidebar</span> -->
       </div>
       <div id="channel-name" class="col align-self-center">
-        <h4>Channel name</h4>
+        <h4><i>{{ session["current_channel"].name }}</i></h4>
       </div>
     </div>
     
@@ -134,7 +168,7 @@
     <!-- message input section -->
     <div class="row form-group mt-2 justify-content-center align-items-end" style="margin: 0">
       <form action="{{ url_for('index') }}" method="post" class="col-11 input-group mb-3" style="padding: 0">
-        <input name="message" id="msg-input" type="text" class="form-control msg-element">
+        <input autofocus name="message" id="msg-input" type="text" class="form-control msg-element">
         <div class="input-group-append">
           <button class="btn msg-element" id="msg-btn">Send</button>
         </div>

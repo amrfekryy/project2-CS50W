@@ -33,11 +33,14 @@ body {
   width: 50px; 
   height: 50px;
 }
-.channels-head a {
-  color: lightgrey; 
-  font-weight: lighter; 
-  font-size: smaller; 
-  margin-left: 60px
+.channels-head .add-icon {
+  color: lightgrey;  
+  font-size: 12px; 
+  margin-left: 70px
+}
+.channels-head .add-icon:hover {
+  color: #fff; 
+  font-size: 14px;
 }
 .channels-head, .users-head {
   padding: 20px;
