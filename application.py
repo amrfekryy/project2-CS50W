@@ -37,11 +37,6 @@ def create_welcome_channel():
 	session["welcome_channel"] = welcome_channel
 	session["current_channel"] = welcome_channel
 
-# add some users
-for i in range(4):
-	user = User(name="Amr", status="")
-	app_storage.users.append(user)
-
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -50,7 +45,8 @@ def index():
 		display_name = request.form.get("display_name")
 		avatar_number = request.form.get("avatar_number")
 		message = request.form.get("message")
-		new_channel_name= request.form.get("new_channel_name")
+		new_channel_name = request.form.get("new_channel_name")
+		channel_switch = request.form.get("switch_to_this_channel")
 		
 		# see if it is the start-form
 		if display_name:
@@ -72,7 +68,7 @@ def index():
 			session["current_channel"].messages.append(message)
 		
 		# if adding a new channel
-		else:
+		elif new_channel_name:
 			# compare channel name to existing names
 			for existing_channel_name in app_storage.channels:
 				if existing_channel_name == new_channel_name:
@@ -81,6 +77,27 @@ def index():
 			new_channel = Channel(new_channel_name)
 			app_storage.channels[new_channel_name] = new_channel
 			session["current_channel"] = new_channel
+		
+		# if switching channel
+		elif channel_switch:
+			session["current_channel"] = channel_switch
+
+			message_list = []
+			stored_messages = 0
+			if channel_switch == "welcome":
+				stored_messages = session["welcome_channel"].messages
+			else:
+				stored_messages = app_storage.channels[channel_switch].messages
+			# turn Message objects into dicts:
+			for message in stored_messages:
+				message_list.append({
+					"avatar_number": message.avatar_number,
+					"username": message.username,
+					"time": message.time,
+					"text": message.text})
+			print(message_list)
+
+			return jsonify({"list": message_list})
 
 	return render_template("index.html", session=session, app_storage=app_storage)
 

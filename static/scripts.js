@@ -121,4 +121,47 @@ document.addEventListener('DOMContentLoaded', () => {
     };
   });
 
+  // switch channel on click
+  document.querySelectorAll('.channel-li').forEach( channel_li => {
+    channel_li.onclick = () => {
+      // Get new channel name
+      const channel_name = channel_li.innerHTML;
+      // Initialize new request
+      const request = new XMLHttpRequest();
+      request.open('POST', '/');
+      // Callback function for when request completes
+      request.onload = () => {
+          // Extract JSON data from request
+          const data = JSON.parse(request.responseText);
+          
+          // update channel name
+          document.querySelector('#channel-name').innerHTML = `<h4><i>${channel_name}</i></h4>`;
+          // clear messages section
+          document.querySelector('#msg-body2').innerHTML = "";
+          // add channel messages
+          alert(data.list)
+          // data.forEach(message => {
+          //   document.querySelector('#msg-body2').append( 
+          //   ```
+          //     <div class="message">
+          //       <img class="avatar" src="../static/images/avatars/{{ message.avatar_number }}.png">
+          //       <strong class="name">{{ message.username }}</strong>
+          //       <div class="text">
+          //         {{ message.text }}
+          //       </div>
+          //     </div>
+          //   ```
+          //   );
+          // });
+      }
+      // Add data to send with request
+      const data = new FormData();
+      data.append('switch_to_this_channel', channel_name);
+      // Send request
+      request.send(data);
+      return false; // stop page reload
+    };
+
+  });  
+
 });

@@ -150,7 +150,7 @@
     
     <!-- messages section -->
     <div id="msg-body" class="row justify-content-center">
-      <div class="col-11 align-self-end" style="padding: 0;">
+      <div id="msg-body2" class="col-11 align-self-end" style="padding: 0;">
 
         {% if session.get('display_name') %}
           {% for message in session["current_channel"].messages %}
