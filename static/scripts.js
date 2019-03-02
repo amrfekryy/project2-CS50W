@@ -211,3 +211,13 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
 });
+
+// autofocus on message input on keydown (unless a modal is up)
+document.body.addEventListener('keydown', () => {
+  var modal1 = document.querySelector('#exampleModal')
+  var modal2 = document.querySelector('#add_channel_modal')
+
+  if (modal1.contains(document.activeElement) === false && modal2.contains(document.activeElement) === false)
+  {document.querySelector('#msg-input').focus()};
+
+});

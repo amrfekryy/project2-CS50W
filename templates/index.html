@@ -23,7 +23,7 @@
   <div class="modal-body row justify-content-center">
     <form id="start_form" action="{{ url_for('index') }}" method="post">
       <!-- display name input -->
-      <input id="display_name" name="display_name" type="text" autocomplete="none" class="form-control" placeholder="Display name" style="width: 250px">
+      <input id="display_name" name="display_name" type="text" autocomplete="off" class="form-control" placeholder="Display name" style="width: 250px">
       <div id="display_name_feedback"></div>
 
       <!-- avatar dropup -->
@@ -67,7 +67,7 @@
     <div class="modal-body row justify-content-center">
       <form id="add_channel_form" action="{{ url_for('index') }}" method="post">
         <!-- display name input -->
-        <input id="new_channel_name" name="new_channel_name" type="text" autocomplete="none" class="form-control" placeholder="Channel name" style="width: 250px">
+        <input id="new_channel_name" name="new_channel_name" type="text" autocomplete="off" class="form-control" placeholder="Channel name" style="width: 250px">
         <div id="new_channel_name_feedback"></div>
       </form>
     </div>
@@ -170,7 +170,7 @@
     <!-- message input section -->
     <div class="row form-group mt-2 justify-content-center align-items-end" style="margin: 0">
       <form id="msg-form" action="{{ url_for('index') }}" method="post" class="col-11 input-group mb-3" style="padding: 0">
-        <input autofocus name="message" id="msg-input" type="text" class="form-control msg-element">
+        <input name="message" id="msg-input" autofocus autocomplete="off" type="text" class="form-control msg-element">
         <div class="input-group-append">
           <button class="btn msg-element" id="msg-btn">Send</button>
         </div>
