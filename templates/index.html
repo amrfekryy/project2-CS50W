@@ -169,7 +169,7 @@
     
     <!-- message input section -->
     <div class="row form-group mt-2 justify-content-center align-items-end" style="margin: 0">
-      <form action="{{ url_for('index') }}" method="post" class="col-11 input-group mb-3" style="padding: 0">
+      <form id="msg-form" action="{{ url_for('index') }}" method="post" class="col-11 input-group mb-3" style="padding: 0">
         <input autofocus name="message" id="msg-input" type="text" class="form-control msg-element">
         <div class="input-group-append">
           <button class="btn msg-element" id="msg-btn">Send</button>

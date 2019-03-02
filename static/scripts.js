@@ -121,6 +121,8 @@ document.addEventListener('DOMContentLoaded', () => {
     };
   });
 
+
+
   // switch channel on click
   document.querySelectorAll('.channel-li').forEach( channel_li => {
     channel_li.onclick = () => {
@@ -153,6 +155,11 @@ document.addEventListener('DOMContentLoaded', () => {
             `
             );
           });
+
+          // keep messages scroll at bottom
+          var messageBody = document.querySelector('#msg-body');
+          messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
+
       }
       // Add data to send with request
       const data = new FormData();
@@ -163,5 +170,44 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
   });  
+
+  // show message on click
+  document.querySelector('#msg-form').onsubmit = () => {
+    // Get message
+    const message = document.querySelector('#msg-input').value
+    // Clear input field
+    document.querySelector('#msg-input').value = ""
+    // Initialize new request
+    const request = new XMLHttpRequest();
+    request.open('POST', '/');
+    // Callback function for when request completes
+    request.onload = () => {
+      // Extract JSON data from request
+      const message_dict = JSON.parse(request.responseText);
+      
+      // add channel messages
+      document.querySelector('#msg-body2').insertAdjacentHTML('beforeend', 
+      `
+        <div class="message">
+          <img class="avatar" src="../static/images/avatars/${ message_dict.avatar_number }.png">
+          <strong class="name">${ message_dict.username }</strong>
+          <div class="text">
+            ${ message_dict.text }
+          </div>
+        </div>
+      `
+      );
+
+      // keep messages scroll at bottom
+      var messageBody = document.querySelector('#msg-body');
+      messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
+    }
+    // Add data to send with request
+    const data = new FormData();
+    data.append('message', message);
+    // Send request
+    request.send(data);
+    return false; // stop page reload
+  };
 
 });

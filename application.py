@@ -77,7 +77,7 @@ def index():
 			msg = Message(
 				avatar_number=session["avatar_number"],
 				username=session["display_name"], 
-				time="", 
+				time="",
 				text=message)
 
 			print("current channel is" + session["current_channel"])
@@ -91,6 +91,12 @@ def index():
 			
 			# test
 			print_data(app_storage)
+
+			return jsonify({
+				"avatar_number": msg.avatar_number, 
+				"username": msg.username, 
+				"time": msg.time, 
+				"text": msg.text})
 		
 		# onsubmit of new channel
 		elif new_channel_name:
