@@ -64,27 +64,3 @@ for message in Storage.channels["channel_name"].messages:
 	print(message.text)	
 
 """
-
-
-          # {% if session.get('current channel') == "welcome" %}
-          #   {% for message in session["welcome_channel"].messages %}
-          #   <div class="message">
-          #     <img class="avatar" src="../static/images/avatars/{{ message.avatar_number }}.png">
-          #     <strong class="name">{{ message.username }}</strong>
-          #     <div class="text">
-          #       {{ message.text }}
-          #     </div>
-          #   </div>
-          #   {% endfor %}
-          # {% endif %}
-          # {% if not session.get('current channel') == "welcome" %}
-          #   {% for message in app_storage.channels[session["current_channel"]].messages %}
-          #   <div class="message">
-          #     <img class="avatar" src="../static/images/avatars/{{ message.avatar_number }}.png">
-          #     <strong class="name">{{ message.username }}</strong>
-          #     <div class="text">
-          #       {{ message.text }}
-          #     </div>
-          #   </div>
-          #   {% endfor %}
-          # {% endif %}

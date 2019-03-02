@@ -139,20 +139,20 @@ document.addEventListener('DOMContentLoaded', () => {
           // clear messages section
           document.querySelector('#msg-body2').innerHTML = "";
           // add channel messages
-          alert(data.list)
-          // data.forEach(message => {
-          //   document.querySelector('#msg-body2').append( 
-          //   ```
-          //     <div class="message">
-          //       <img class="avatar" src="../static/images/avatars/{{ message.avatar_number }}.png">
-          //       <strong class="name">{{ message.username }}</strong>
-          //       <div class="text">
-          //         {{ message.text }}
-          //       </div>
-          //     </div>
-          //   ```
-          //   );
-          // });
+          // alert(data.list)
+          data.list.forEach(message => {
+            document.querySelector('#msg-body2').insertAdjacentHTML('beforeend', 
+            `
+              <div class="message">
+                <img class="avatar" src="../static/images/avatars/${ message.avatar_number }.png">
+                <strong class="name">${ message.username }</strong>
+                <div class="text">
+                  ${ message.text }
+                </div>
+              </div>
+            `
+            );
+          });
       }
       // Add data to send with request
       const data = new FormData();

@@ -46,6 +46,7 @@ def create_welcome_channel():
 	# add channel to storage
 	session["welcome_channel"] = welcome_channel
 	session["current_channel"] = "welcome"
+	session["current_channel_object"] = welcome_channel
 
 def print_data(storage):
 	session["welcome_channel"].print_data()
@@ -88,8 +89,6 @@ def index():
 				app_storage.channels[session["current_channel"]].messages.append(msg)
 				print(app_storage.channels[session["current_channel"]].messages)
 			
-
-
 			# test
 			print_data(app_storage)
 		
@@ -102,6 +101,7 @@ def index():
 			new_channel = Channel(new_channel_name)
 			app_storage.channels[new_channel_name] = new_channel
 			session["current_channel"] = new_channel_name
+			session["current_channel_object"] = new_channel
 
 			# test
 			print_data(app_storage)
@@ -110,12 +110,15 @@ def index():
 		elif channel_switch:
 			print(f"switched to {channel_switch}")
 
-			stored_messages = 0
+			stored_messages = []
+			
 			if channel_switch == "welcome":
 				session["current_channel"] = "welcome"
+				session["current_channel_object"] = session["welcome_channel"]
 				stored_messages = session["welcome_channel"].messages
 			else:
 				session["current_channel"] = channel_switch
+				session["current_channel_object"] = app_storage.channels[session["current_channel"]]
 				stored_messages = app_storage.channels[session["current_channel"]].messages
 			
 			print("current channel is" + session["current_channel"], stored_messages)

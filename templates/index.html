@@ -143,7 +143,7 @@
       </div>
       <div id="channel-name" class="col align-self-center">
         {% if session.get('display_name') %}
-        <h4><i>{{ session["current_channel"].name }}</i></h4>
+        <h4><i>{{ session["current_channel"] }}</i></h4>
         {% endif %}
       </div>
     </div>
@@ -153,9 +153,15 @@
       <div id="msg-body2" class="col-11 align-self-end" style="padding: 0;">
 
         {% if session.get('display_name') %}
-
-
-          
+          {% for message in session["current_channel_object"].messages %}
+          <div class="message">
+            <img class="avatar" src="../static/images/avatars/{{ message.avatar_number }}.png">
+            <strong class="name">{{ message.username }}</strong>
+            <div class="text">
+              {{ message.text }}
+            </div>
+          </div>
+          {% endfor %}
         {% endif %}
 
       </div>
