@@ -4,10 +4,34 @@ class Storage():
 		self.channels = {}
 		self.users = []
 
+	def print_data(self):
+		"""print all data stored in a storage for testing porpuses"""
+		
+		print("**** STORAGE CHANNELS ****")
+		for x, channel in self.channels.items():
+		# x is channel name, but channel.name also is
+				
+			channel.print_data()
+
+		print()
+		
+		print("**** USERS ****")
+		for user in self.users:
+			print(f"- {user.name}")
+
+
 class Channel():
 	def __init__(self, name):
 		self.name = name
 		self.messages = []
+
+	def print_data(self):
+		"""print data stored in a channel for testing porpuses"""
+					
+		print(f"- {self.name}")
+		for msg in self.messages:
+			print(f"avatar {msg.avatar_number}, {msg.username}:")
+			print(msg.text)
 
 class Message():
 	def __init__(self, avatar_number, username, time, text):
@@ -20,6 +44,7 @@ class User():
 	def __init__(self, name, status):
 		self.name = name
 		self.status = status
+
 
 """
 Usage:
@@ -39,3 +64,27 @@ for message in Storage.channels["channel_name"].messages:
 	print(message.text)	
 
 """
+
+
+          # {% if session.get('current channel') == "welcome" %}
+          #   {% for message in session["welcome_channel"].messages %}
+          #   <div class="message">
+          #     <img class="avatar" src="../static/images/avatars/{{ message.avatar_number }}.png">
+          #     <strong class="name">{{ message.username }}</strong>
+          #     <div class="text">
+          #       {{ message.text }}
+          #     </div>
+          #   </div>
+          #   {% endfor %}
+          # {% endif %}
+          # {% if not session.get('current channel') == "welcome" %}
+          #   {% for message in app_storage.channels[session["current_channel"]].messages %}
+          #   <div class="message">
+          #     <img class="avatar" src="../static/images/avatars/{{ message.avatar_number }}.png">
+          #     <strong class="name">{{ message.username }}</strong>
+          #     <div class="text">
+          #       {{ message.text }}
+          #     </div>
+          #   </div>
+          #   {% endfor %}
+          # {% endif %}

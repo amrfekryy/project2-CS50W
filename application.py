@@ -20,6 +20,16 @@ Session(app)
 # a global Storage object to store common data
 app_storage = Storage()
 
+# add a temp channel with temp messages
+app_storage.channels["temp"] = Channel("temp")
+msg1 = Message("1", "temp user", "", "temporary message for testing")
+msg2 = Message("1", "temp user", "", "temporary message for testing")
+msg3 = Message("1", "temp user", "", "temporary message for testing")
+app_storage.channels["temp"].messages.append(msg1)
+app_storage.channels["temp"].messages.append(msg2)
+app_storage.channels["temp"].messages.append(msg3)
+
+
 def create_welcome_channel():
 	# create welcome channel
 	welcome_channel = Channel(name="welcome")
@@ -35,8 +45,11 @@ def create_welcome_channel():
 	welcome_channel.messages.append(welcome_message)
 	# add channel to storage
 	session["welcome_channel"] = welcome_channel
-	session["current_channel"] = welcome_channel
+	session["current_channel"] = "welcome"
 
+def print_data(storage):
+	session["welcome_channel"].print_data()
+	storage.print_data()
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -48,7 +61,7 @@ def index():
 		new_channel_name = request.form.get("new_channel_name")
 		channel_switch = request.form.get("switch_to_this_channel")
 		
-		# see if it is the start-form
+		# onsubmit of start-form
 		if display_name:
 			app_storage.users.append(User(name=display_name, status=""))
 
@@ -56,38 +69,58 @@ def index():
 			session["avatar_number"] = avatar_number
 			
 			create_welcome_channel()
+			# app_storage.channels["welcome"] = session["welcome_channel"]
 		
-		# see if it is a new message
+		# onsubmit of new message
 		elif message:
-			message = Message(
+			msg = Message(
 				avatar_number=session["avatar_number"],
-				username=session.get("display_name"), 
+				username=session["display_name"], 
 				time="", 
 				text=message)
+
+			print("current channel is" + session["current_channel"])
 			# add the message to the current channel
-			session["current_channel"].messages.append(message)
+			if session["current_channel"] == "welcome":
+				session["welcome_channel"].messages.append(msg)
+				print(session["welcome_channel"].messages)
+			else:
+				app_storage.channels[session["current_channel"]].messages.append(msg)
+				print(app_storage.channels[session["current_channel"]].messages)
+			
+
+
+			# test
+			print_data(app_storage)
 		
-		# if adding a new channel
+		# onsubmit of new channel
 		elif new_channel_name:
-			# compare channel name to existing names
-			for existing_channel_name in app_storage.channels:
-				if existing_channel_name == new_channel_name:
-					return "channel already exists!"
+			# compare channel name to existing names (dict keys)
+			if new_channel_name in app_storage.channels:
+				return "channel already exists!"
 			# channel name is new
 			new_channel = Channel(new_channel_name)
 			app_storage.channels[new_channel_name] = new_channel
-			session["current_channel"] = new_channel
-		
-		# if switching channel
-		elif channel_switch:
-			session["current_channel"] = channel_switch
+			session["current_channel"] = new_channel_name
 
-			message_list = []
+			# test
+			print_data(app_storage)
+		
+		# on switching channels
+		elif channel_switch:
+			print(f"switched to {channel_switch}")
+
 			stored_messages = 0
 			if channel_switch == "welcome":
+				session["current_channel"] = "welcome"
 				stored_messages = session["welcome_channel"].messages
 			else:
-				stored_messages = app_storage.channels[channel_switch].messages
+				session["current_channel"] = channel_switch
+				stored_messages = app_storage.channels[session["current_channel"]].messages
+			
+			print("current channel is" + session["current_channel"], stored_messages)
+			
+			message_list = []
 			# turn Message objects into dicts:
 			for message in stored_messages:
 				message_list.append({
@@ -95,7 +128,9 @@ def index():
 					"username": message.username,
 					"time": message.time,
 					"text": message.text})
-			print(message_list)
+			
+			# test
+			print_data(app_storage)
 
 			return jsonify({"list": message_list})
 
