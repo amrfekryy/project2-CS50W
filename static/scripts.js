@@ -1,15 +1,13 @@
        
 document.addEventListener('DOMContentLoaded', () => {
 
-  // if new user
+  // show modal if new user (exit disabled)
   if (!localStorage.getItem('display_name')) {
-    // show modal with esc/click exit disabled
     $('#exampleModal').modal({keyboard: false, backdrop: 'static'})    
   }
 
-  // keep messages scroll at bottom
-  var messageBody = document.querySelector('#msg-body');
-  messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
+
+// *********************** (START-FORM MODAL JS) *************************
 
   // validate if display name available onkeyup (mark is-valid/is-invalid)
   var display_name = document.querySelector('#display_name');
@@ -58,31 +56,22 @@ document.addEventListener('DOMContentLoaded', () => {
     request.send(data);
     return false; // stop page reload
   };
-  // verify start-form onsubmit
-  document.querySelector('#start_form').onsubmit = () => {
-      // temp variable
-      var invalid_name = false;        
-      // don't submit and mark invalid if:
-      // no display name present
-      if (display_name.value === "") {
-          display_name.classList.add('is-invalid');
-          display_name_feedback.classList.remove('valid-feedback');
-          display_name_feedback.classList.add('invalid-feedback');
-          display_name_feedback.innerHTML = "Please enter a display name"                           
-          invalid_name = true;
-      };
-      // invalid display name present
-      if (display_name.classList.contains('is-invalid')) {
-          invalid_name = true;
-      }
-      if (invalid_name) {
-        return false;
-      } else {
-        localStorage.setItem('display_name', display_name.value);
-        return true;
-      };
-  };
 
+  // display avatar and get its number on click
+  document.querySelectorAll('.avatar_option').forEach( avatar_selection => {
+    avatar_selection.onclick = () => {
+    document.querySelector('#avatar_selection').src = avatar_selection.src;
+    document.querySelector('#avatar_selection_btn').innerHTML = "";
+    document.querySelector('#avatar_number').value = avatar_selection.dataset.value;
+    };
+  });
+
+
+// *********************** (CHAT APP JS) *************************
+
+  // keep messages scroll at bottom
+  var messageBody = document.querySelector('#msg-body');
+  messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
 
   // toggle sidebar on click
   document.querySelector('#sidebarCollapse').onclick = () => {
@@ -111,17 +100,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('#msg-btn').style.backgroundColor = "inherit";
     };
   });
-  
-  // display avatar and get its number on click
-  document.querySelectorAll('.avatar_option').forEach( avatar_selection => {
-    avatar_selection.onclick = () => {
-    document.querySelector('#avatar_selection').src = avatar_selection.src;
-    document.querySelector('#avatar_selection_btn').innerHTML = "";
-    document.querySelector('#avatar_number').value = avatar_selection.dataset.value;
-    };
-  });
-
-
 
   // switch channel on click
   document.querySelectorAll('.channel-li').forEach( channel_li => {
@@ -171,44 +149,132 @@ document.addEventListener('DOMContentLoaded', () => {
 
   });  
 
-  // show message on click
-  document.querySelector('#msg-form').onsubmit = () => {
-    // Get message
-    const message = document.querySelector('#msg-input').value
-    // Clear input field
-    document.querySelector('#msg-input').value = ""
-    // Initialize new request
-    const request = new XMLHttpRequest();
-    request.open('POST', '/');
-    // Callback function for when request completes
-    request.onload = () => {
-      // Extract JSON data from request
-      const message_dict = JSON.parse(request.responseText);
-      
-      // add channel messages
+// *********************** (SOCKETIO EVENTS) *************************
+
+  // Connect to websocket (standard line)
+  var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+
+  // When connected, configure following buttons
+  socket.on('connect', () => {
+
+      // verify start-form onsubmit
+      document.querySelector('#start_form').onsubmit = () => {
+          // temp variable
+          var invalid_name = false;        
+          // don't submit and mark invalid if:
+          // no display name present
+          if (display_name.value === "") {
+              display_name.classList.add('is-invalid');
+              display_name_feedback.classList.remove('valid-feedback');
+              display_name_feedback.classList.add('invalid-feedback');
+              display_name_feedback.innerHTML = "Please enter a display name"                           
+              invalid_name = true;
+          };
+          // invalid display name present
+          if (display_name.classList.contains('is-invalid')) {
+              invalid_name = true;
+          }
+          if (invalid_name) {
+            return false;
+          } else {
+            localStorage.setItem('display_name', display_name.value);
+            // emit an event to notify server
+            socket.emit('new user', {'display_name': display_name.value});
+            return true;
+          };
+      }; // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+      // verify start-form onsubmit
+      document.querySelector('#add_channel_form').onsubmit = () => {
+
+        var channel_name = document.querySelector('#new_channel_name').value;
+        // emit an event to notify server
+        socket.emit('new channel', {'channel_name': channel_name});
+
+
+      }; // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+      // show new message on click
+      document.querySelector('#msg-form').onsubmit = () => {
+        // Get message
+        const message = document.querySelector('#msg-input').value
+        // Clear input field
+        document.querySelector('#msg-input').value = ""
+        // Initialize new request
+        const request = new XMLHttpRequest();
+        request.open('POST', '/');
+        // Callback function for when request completes
+        request.onload = () => {
+          // Extract JSON data from request
+          const message_dict = JSON.parse(request.responseText);
+          
+          // add message
+          document.querySelector('#msg-body2').insertAdjacentHTML('beforeend', 
+          `
+            <div class="message">
+              <img class="avatar" src="../static/images/avatars/${ message_dict.avatar_number }.png">
+              <strong class="name">${ message_dict.username }</strong>
+              <div class="text">
+                ${ message_dict.text }
+              </div>
+            </div>
+          `
+          );
+
+          // keep messages scroll at bottom
+          var messageBody = document.querySelector('#msg-body');
+          messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
+
+          // emit an event to notify server
+          const channel_name = document.querySelector('#channel-name > h4 > i').innerHTML
+          socket.emit('new message', {'message_dict': message_dict, 'channel_name': channel_name});
+
+        }
+        // Add data to send with request
+        const data = new FormData();
+        data.append('message', message);
+        // Send request
+        request.send(data);
+        return false; // stop page reload
+      }; // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  });
+
+
+  // on socket notifications from server
+
+  socket.on('add_new_channel', data => {
+    const li = document.createElement('li');
+    li.innerHTML = data.channel_name;
+    document.querySelector('.channels-list > ul').append(li);
+  });  
+  socket.on('add_new_user', data => {
+    const li = document.createElement('li');
+    li.innerHTML = data.display_name;
+    document.querySelector('.users-list > ul').append(li);
+  });
+  socket.on('add_new_message', data => {
+    
+    // get the current channel name
+    var current_channel_name = document.querySelector('#channel-name > h4 > i').innerHTML;
+    // only display new messages if ..
+    if (current_channel_name === data.channel_name && current_channel_name !== "welcome") {
       document.querySelector('#msg-body2').insertAdjacentHTML('beforeend', 
       `
         <div class="message">
-          <img class="avatar" src="../static/images/avatars/${ message_dict.avatar_number }.png">
-          <strong class="name">${ message_dict.username }</strong>
+          <img class="avatar" src="../static/images/avatars/${ data.message_dict.avatar_number }.png">
+          <strong class="name">${ data.message_dict.username }</strong>
           <div class="text">
-            ${ message_dict.text }
+            ${ data.message_dict.text }
           </div>
         </div>
-      `
-      );
+      `);  
+    }; // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-      // keep messages scroll at bottom
-      var messageBody = document.querySelector('#msg-body');
-      messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
-    }
-    // Add data to send with request
-    const data = new FormData();
-    data.append('message', message);
-    // Send request
-    request.send(data);
-    return false; // stop page reload
-  };
+    // keep messages scroll at bottom
+    var messageBody = document.querySelector('#msg-body');
+    messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
+
+  });  
 
 });
 

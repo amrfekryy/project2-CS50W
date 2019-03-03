@@ -3,13 +3,13 @@ from helpers import *
 
 from flask import Flask, render_template, request, jsonify, session
 from flask_session import Session
-# from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO, emit            #socketio
 
 
 # configure file to use flask and flask_socketio
 app = Flask(__name__)
-# app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
-# socketio = SocketIO(app)
+app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")   #socketio
+socketio = SocketIO(app) 							 #socketio
 
 # Configure session to use filesystem
 app.config["SESSION_PERMANENT"] = False
@@ -158,3 +158,24 @@ def validate_name():
         	return jsonify({"name_available": False})
     return jsonify({"name_available": True})
 
+
+# on socket notifications from clients
+
+@socketio.on("new channel")
+def new_user(data):
+
+    channel_name = data["channel_name"]
+    emit("add_new_channel", {"channel_name": channel_name}, broadcast=True, include_self=False)
+
+@socketio.on("new user")
+def new_user(data):
+
+    display_name = data["display_name"]
+    emit("add_new_user", {"display_name": display_name}, broadcast=True, include_self=False)
+
+@socketio.on("new message")
+def new_message(data):
+
+    message_dict = data["message_dict"]
+    channel_name = data["channel_name"]
+    emit("add_new_message", {"message_dict": message_dict, 'channel_name': channel_name}, broadcast=True, include_self=False)
