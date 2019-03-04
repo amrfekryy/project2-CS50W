@@ -51,6 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     // Add data to send with request
     const data = new FormData();
+    data.append('new_user_request', true);
     data.append('display_name', name);
     // Send request
     request.send(data);
@@ -65,6 +66,58 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('#avatar_number').value = avatar_selection.dataset.value;
     };
   });
+
+
+// *********************** (NEW-CHANNEL MODAL JS) *************************
+
+  // validate if display name available onkeyup (mark is-valid/is-invalid)
+  var channel_name = document.querySelector('#new_channel_name');
+  var channel_name_feedback = document.querySelector('#new_channel_name_feedback');
+  channel_name.onkeyup = () => {
+    // Get channel_name value
+    const name = channel_name.value;
+    // Initialize new request
+    const request = new XMLHttpRequest();
+    request.open('POST', '/validate_name'); 
+    // Callback function for when request completes
+    request.onload = () => {
+        // Extract JSON data from request
+        const data = JSON.parse(request.responseText);
+        // Update the result div
+        if (data.name_available) {
+            // mark as valid
+            channel_name.classList.remove('is-invalid');
+            channel_name.classList.add('is-valid');
+            channel_name_feedback.classList.remove('invalid-feedback');
+            channel_name_feedback.classList.add('valid-feedback');
+            channel_name_feedback.innerHTML = "Looks good!"
+        }
+        else {
+            // mark as invalid
+            channel_name.classList.remove('is-valid');
+            channel_name.classList.add('is-invalid');
+            channel_name_feedback.classList.remove('valid-feedback');
+            channel_name_feedback.classList.add('invalid-feedback');
+            channel_name_feedback.innerHTML = "There is a channel with this name!"
+        }
+        // check for empty field
+        if (channel_name.value === "") {
+            // mark as invalid
+            channel_name.classList.remove('is-valid');
+            channel_name.classList.add('is-invalid');
+            channel_name_feedback.classList.remove('valid-feedback');
+            channel_name_feedback.classList.add('invalid-feedback');
+            channel_name_feedback.innerHTML = "Please enter a channel name"
+        }
+    }
+    // Add data to send with request
+    const data = new FormData();
+    data.append('new_channel_request', true);
+    data.append('channel_name', name);
+    // Send request
+    request.send(data);
+    return false; // stop page reload
+  };
 
 
 // *********************** (CHAT APP JS) *************************
@@ -160,7 +213,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // verify start-form onsubmit
       document.querySelector('#start_form').onsubmit = () => {
           // temp variable
-          var invalid_name = false;        
+          let invalid_name = false;        
           // don't submit and mark invalid if:
           // no display name present
           if (display_name.value === "") {
@@ -184,14 +237,32 @@ document.addEventListener('DOMContentLoaded', () => {
           };
       }; // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-      // verify start-form onsubmit
+      // verify new-channel-form onsubmit
       document.querySelector('#add_channel_form').onsubmit = () => {
 
-        var channel_name = document.querySelector('#new_channel_name').value;
-        // emit an event to notify server
-        socket.emit('new channel', {'channel_name': channel_name});
-
-
+          // temp variable
+          let invalid_name = false;        
+          
+          // don't submit and mark invalid if:
+          // no display name present
+          if (channel_name.value === "") {
+              channel_name.classList.add('is-invalid');
+              channel_name_feedback.classList.remove('valid-feedback');
+              channel_name_feedback.classList.add('invalid-feedback');
+              channel_name_feedback.innerHTML = "Please enter a channel name"                           
+              invalid_name = true;
+          };
+          // invalid display name present
+          if (channel_name.classList.contains('is-invalid')) {
+              invalid_name = true;
+          }
+          if (invalid_name) {
+            return false;
+          } else {
+            // emit an event to notify server
+            socket.emit('new channel', {'channel_name': channel_name.value});
+            return true;
+          };
       }; // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
       // show new message on click

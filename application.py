@@ -73,10 +73,7 @@ def index():
 		
 		# onsubmit of new channel
 		elif new_channel_name:
-			# compare channel name to existing names (dict keys)
-			if new_channel_name in app_storage.channels:
-				return "channel already exists!"
-			# channel name is new
+			
 			new_channel = Channel(new_channel_name)
 			app_storage.channels[new_channel_name] = new_channel
 			session["current_channel"] = new_channel_name
@@ -122,14 +119,25 @@ def index():
 @app.route("/validate_name", methods=["POST"])
 def validate_name():
 
-    # get the display_name
-    display_name = request.form.get("display_name")
+	# identify which request is it
+	new_user_request = request.form.get("new_user_request")
+	new_channel_request = request.form.get("new_channel_request")
+	
+	if new_user_request:
+		display_name = request.form.get("display_name")
+		# check if display_name is available
+		for user in app_storage.users:
+			if display_name == user.name:
+				return jsonify({"name_available": False})
+		return jsonify({"name_available": True})
 
-    # check if display_name is available
-    for user in app_storage.users:
-    	if display_name == user.name:
-        	return jsonify({"name_available": False})
-    return jsonify({"name_available": True})
+	elif new_channel_request:
+		channel_name = request.form.get("channel_name")
+		# check if channel_name is available
+		if channel_name in app_storage.channels:
+			return jsonify({"name_available": False})
+		return jsonify({"name_available": True})
+
 
 
 # on socket notifications from clients
@@ -152,3 +160,4 @@ def new_message(data):
     message_dict = data["message_dict"]
     channel_name = data["channel_name"]
     emit("add_new_message", {"message_dict": message_dict, 'channel_name': channel_name}, broadcast=True, include_self=False)
+
