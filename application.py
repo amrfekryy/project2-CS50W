@@ -20,37 +20,8 @@ Session(app)
 # a global Storage object to store common data
 app_storage = Storage()
 
-# add a temp channel with temp messages
-app_storage.channels["temp"] = Channel("temp")
-msg1 = Message("1", "temp user", "", "temporary message for testing")
-msg2 = Message("1", "temp user", "", "temporary message for testing")
-msg3 = Message("1", "temp user", "", "temporary message for testing")
-app_storage.channels["temp"].messages.append(msg1)
-app_storage.channels["temp"].messages.append(msg2)
-app_storage.channels["temp"].messages.append(msg3)
+create_test_channel("test1", app_storage, 5)
 
-
-def create_welcome_channel():
-	# create welcome channel
-	welcome_channel = Channel(name="welcome")
-	# create welcome message
-	msg = """
-	Hello there! welcome to Flack. 
-
-	You can join a group chat by clicking on any channel, or you can start your own channel. 
-	You can also start a private chat between you and any other user.
-	"""
-	welcome_message = Message(avatar_number=1 , username="Amr Fekry", time="", text=msg)
-	# add message to channel
-	welcome_channel.messages.append(welcome_message)
-	# add channel to storage
-	session["welcome_channel"] = welcome_channel
-	session["current_channel"] = "welcome"
-	session["current_channel_object"] = welcome_channel
-
-def print_data(storage):
-	session["welcome_channel"].print_data()
-	storage.print_data()
 
 @app.route("/", methods=["GET", "POST"])
 def index():

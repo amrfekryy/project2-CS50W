@@ -4,22 +4,6 @@ class Storage():
 		self.channels = {}
 		self.users = []
 
-	def print_data(self):
-		"""print all data stored in a storage for testing porpuses"""
-		
-		print("**** STORAGE CHANNELS ****")
-		for x, channel in self.channels.items():
-		# x is channel name, but channel.name also is
-				
-			channel.print_data()
-
-		print()
-		
-		print("**** USERS ****")
-		for user in self.users:
-			print(f"- {user.name}")
-
-
 class Channel():
 	def __init__(self, name):
 		self.name = name
@@ -28,7 +12,7 @@ class Channel():
 	def print_data(self):
 		"""print data stored in a channel for testing porpuses"""
 					
-		print(f"- {self.name}")
+		print(f"------- channel: {self.name}")
 		for msg in self.messages:
 			print(f"avatar {msg.avatar_number}, {msg.username}:")
 			print(msg.text)
@@ -46,21 +30,58 @@ class User():
 		self.status = status
 
 
-"""
-Usage:
+from flask import session
 
-- to get all channels names:
-for channel in Storage.channels:
-	print(channel)
+def create_welcome_channel():
+	"""
+	create channel "welcome" that stores unique messages for each user (saved in session) 
+	"""
 
-- to get all users names:
-for user in Storage.users:
-	print(user.name)
+	welcome_channel = Channel(name="welcome")
+	msg = """
+	Hello there! welcome to Flack. 
 
-- to get all messages of a specific channel:
-for message in Storage.channels["channel_name"].messages:
-	print(message.username)
-	print(message.time)
-	print(message.text)	
+	You can join a group chat by clicking on any channel, or you can start your own channel. 
+	You can also start a private chat between you and any other user.
+	"""
+	welcome_message = Message(avatar_number=1 , username="Amr Fekry", time="", text=msg)
+	# add message to channel
+	welcome_channel.messages.append(welcome_message)
+	# add channel to storage
+	session["welcome_channel"] = welcome_channel
+	session["current_channel"] = "welcome"
+	session["current_channel_object"] = welcome_channel
 
-"""
+
+def create_test_channel(name, storage, msg_count):
+	"""
+	create a channel for testing purposes
+	"""
+
+	storage.channels[name] = Channel(name)
+	for i in range(msg_count):
+		msg = Message("1", "temp user", "", "temporary message for testing")
+		storage.channels[name].messages.append(msg)
+
+def print_data(storage):
+	"""
+	print all data (channels, messages, users) 
+	stored in the storage object in CLI for testing purposes
+	"""
+	print()	
+	print("----------------------Data Report-----------------------")
+	print()
+	print("**** CHANNELS ****")
+	print()
+	session["welcome_channel"].print_data()
+	for channel_name, channel_object in storage.channels.items():
+	# channel name can be accessed through channel_name or channel_object.name			
+		channel_object.print_data()
+	print()
+	print("**** USERS ****")
+	print()
+	for user in storage.users:
+		print(f"--- {user.name}")
+	print()
+	print("--------------------------------------------------------")
+
