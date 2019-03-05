@@ -124,6 +124,12 @@ body {
 .message .name {
   display: inline-block;
 }
+.message .time {
+  font-size: smaller;
+  color: grey;
+  display: inline-block;
+  float:right;
+}
 .message .text {
   padding-left: 45px; 
   margin-top: -8px;

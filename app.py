@@ -1,4 +1,5 @@
 import os
+import datetime
 
 from storage_classes import *
 from helpers import *
@@ -50,7 +51,7 @@ def index():
 			msg = Message(
 				avatar_number=session["avatar_number"],
 				username=session["display_name"], 
-				time="",
+				time=str(datetime.datetime.utcnow()).split('.')[0].split(' ')[1] + ' UTC',
 				text=message)
 
 			print("current channel is" + session["current_channel"])

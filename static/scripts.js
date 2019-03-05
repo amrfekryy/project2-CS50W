@@ -179,9 +179,8 @@ document.addEventListener('DOMContentLoaded', () => {
               <div class="message">
                 <img class="avatar" src="../static/images/avatars/${ message.avatar_number }.png">
                 <strong class="name">${ message.username }</strong>
-                <div class="text">
-                  ${ message.text }
-                </div>
+                <span class="time">${ message.time }</span>
+                <div class="text">${ message.text }</div>
               </div>
             `
             );
@@ -285,9 +284,8 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="message">
               <img class="avatar" src="../static/images/avatars/${ message_dict.avatar_number }.png">
               <strong class="name">${ message_dict.username }</strong>
-              <div class="text">
-                ${ message_dict.text }
-              </div>
+              <span class="time">${ message_dict.time }</span>
+              <div class="text">${ message_dict.text }</div>
             </div>
           `
           );
@@ -334,9 +332,8 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="message">
           <img class="avatar" src="../static/images/avatars/${ data.message_dict.avatar_number }.png">
           <strong class="name">${ data.message_dict.username }</strong>
-          <div class="text">
-            ${ data.message_dict.text }
-          </div>
+          <span class="time">${ data.message_dict.time }</span>
+          <div class="text">${ data.message_dict.text }</div>
         </div>
       `);  
     }; // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

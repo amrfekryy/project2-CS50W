@@ -157,9 +157,8 @@
           <div class="message">
             <img class="avatar" src="../static/images/avatars/{{ message.avatar_number }}.png">
             <strong class="name">{{ message.username }}</strong>
-            <div class="text">
-              {{ message.text }}
-            </div>
+            <span class="time">{{ message.time }}</span>
+            <div class="text">{{ message.text }}</div>
           </div>
           {% endfor %}
         {% endif %}
