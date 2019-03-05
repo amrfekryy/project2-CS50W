@@ -57,9 +57,11 @@ def index():
 			# add the message to the current channel
 			if session["current_channel"] == "welcome":
 				session["welcome_channel"].messages.append(msg)
+				session["welcome_channel"].keep_100_messages()
 				print(session["welcome_channel"].messages)
 			else:
 				app_storage.channels[session["current_channel"]].messages.append(msg)
+				app_storage.channels[session["current_channel"]].keep_100_messages()
 				print(app_storage.channels[session["current_channel"]].messages)
 			
 			# test
