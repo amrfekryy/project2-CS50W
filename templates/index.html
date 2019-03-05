@@ -136,15 +136,28 @@
   <div id="content" class="container-fluid">
     
     <!-- head section -->
-    <div class="row content-head">
-      <div id="sidebarCollapse" title="toggle sidebar">
-        <i class="fas fa-align-center"></i>
-        <!-- <span>Toggle Sidebar</span> -->
+    <div class="row content-head justify-content-between">
+      <div>
+        <div id="sidebarCollapse" title="toggle sidebar">
+          <i class="fas fa-align-center"></i>
+        </div>
+        <div id="channel-name" class="align-self-center">
+          {% if session.get('display_name') %}
+          <h4><i>{{ session["current_channel"] }}</i></h4>
+          {% endif %}
+        </div>
       </div>
-      <div id="channel-name" class="col align-self-center">
-        {% if session.get('display_name') %}
-        <h4><i>{{ session["current_channel"] }}</i></h4>
-        {% endif %}
+
+      <div class="btn-group dropleft align-self-center mr-5">
+        <a title="add a new channel" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <span class="settings-icon">
+            <i class="fas fa-cog fa-lg"></i>
+          </span>
+        </a>
+        <div class="dropdown-menu">
+          <a class="dropdown-item" href="#">Night mode</a>
+          <a class="dropdown-item" href="#">Leave Flack</a>
+        </div>
       </div>
     </div>
     

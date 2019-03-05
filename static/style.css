@@ -81,6 +81,7 @@ body {
   height: 60px;
   text-align: center;
   padding:20px 0;
+  display: inline-block;
 }
 #sidebarCollapse:hover {
   background-color: #01445A;
@@ -92,8 +93,19 @@ body {
   border-bottom: 1px solid grey
 }
 #channel-name {
-  color: grey
+  color: grey;
+  display: inline-block;
 }
+#content .content-head .dropleft {
+  display: inline-block; float: right;
+}
+#content .content-head .settings-icon {
+  color: grey;
+}
+#content .content-head .settings-icon:hover {
+  color: #01445A; 
+}
+
 #msg-input {
   color: #000;
   border: 2px solid grey;
