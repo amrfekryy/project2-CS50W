@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
   var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
   // When connected, configure following buttons
   socket.on('connect', () => {
-    
+
     validate_startform_and_emit_newuser_onsubmit(socket)
     validate_channelform_and_emit_newchannel_onsubmit(socket)
     add_and_emit_newmessage_onsubmit(socket)
@@ -214,10 +214,18 @@ function toggle_sidebar_onclick() {
 
   // toggle sidebar on click
   document.querySelector('#sidebarCollapse').onclick = () => {
-    document.querySelector('#sidebar').classList.toggle('active');
-    document.querySelector('#content').classList.toggle('active');
-    document.querySelector('#sidebarCollapse').classList.toggle('active');
-    document.querySelector('#channel-name').classList.toggle('active');
+    document.querySelector('#sidebar').classList.toggle('active'); // sidebar margin
+    document.querySelector('#content').classList.toggle('active'); // content margin
+    document.querySelector('#channel-name').classList.toggle('active'); // channel-name visibility
+    
+    let toggler = document.querySelector('#sidebarCollapse');
+    toggler.classList.toggle('active'); // toggler margin
+    if (toggler.classList.contains('active')) {
+      toggler.innerHTML = '<i class="fas fa-chevron-circle-left fa-lg"></i>';
+    }
+    else {
+      toggler.innerHTML = '<i class="fas fa-chevron-circle-right fa-lg"></i>';
+    } // toggler icon
   };
 
 } // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

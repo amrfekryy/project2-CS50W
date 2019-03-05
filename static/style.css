@@ -76,7 +76,7 @@ body {
   padding-left: 25px;
 }
 #sidebarCollapse {
-  color: #01445A;
+  color: grey;
   width: 60px;
   height: 60px;
   text-align: center;
@@ -84,8 +84,7 @@ body {
   display: inline-block;
 }
 #sidebarCollapse:hover {
-  background-color: #01445A;
-  color: #fff;
+  color: #01445A;
 }
 
 #content .content-head {
