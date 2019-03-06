@@ -37,6 +37,8 @@ document.addEventListener('DOMContentLoaded', () => {
     `
       <li class="channel-li">${ data.channel_name }</li>
     `);
+    // add functionality to channels
+    switch_channel_onclick()
   });  
 
   socket.on('add_new_user', data => {
