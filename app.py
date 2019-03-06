@@ -164,3 +164,18 @@ def new_message(data):
     channel_name = data["channel_name"]
     emit("add_new_message", {"message_dict": message_dict, 'channel_name': channel_name}, broadcast=True, include_self=False)
 
+@socketio.on("user left")
+def user_left(data):
+	# get display_name
+	display_name = data["display_name"]
+	# clear session
+	session.clear()
+	# remove user from app_storage
+	for user_object in app_storage.users:
+		if display_name == user_object.name:
+			app_storage.users.remove(user_object)
+	# test
+	print_data(app_storage)
+	# emit to all clients
+	emit("delete_user", {"display_name": display_name}, broadcast=True)
+

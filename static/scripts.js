@@ -15,7 +15,8 @@ document.addEventListener('DOMContentLoaded', () => {
   highlight_message_input_onfocus()
   unhighlight_message_input_onfocusout()
 
-  switch_channel_onclick()  
+  switch_channel_onclick()
+
 
   // Connect to websocket (standard line)
   var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
@@ -25,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     validate_startform_and_emit_newuser_onsubmit(socket)
     validate_channelform_and_emit_newchannel_onsubmit(socket)
     add_and_emit_newmessage_onsubmit(socket)
+    leave_flack_onclick(socket)
 
   });
 
@@ -59,6 +61,14 @@ document.addEventListener('DOMContentLoaded', () => {
     keep_message_scroll_at_bottom()
 
   });  
+  socket.on('delete_user', data => {
+
+    document.querySelectorAll('user-li').forEach(li => {
+      if (li.innerHTML === data.display_name) {
+        li.parentNode.removeChild(li);
+      }
+    });
+  });
 
 });
 
@@ -307,6 +317,21 @@ function switch_channel_onclick() {
 
   });
 
+} // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+function leave_flack_onclick(socket) {
+
+  document.querySelector('#leave_flack').onclick = () => {
+
+    // document.querySelector('.sidebar-header').innerHTML = '';
+
+    const display_name = localStorage.getItem('display_name');
+    // emit an event to notify server
+    socket.emit('user left', {'display_name': display_name});
+
+    localStorage.removeItem('display_name');
+    return true;
+  };
 } // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 function validate_startform_and_emit_newuser_onsubmit(socket) {
