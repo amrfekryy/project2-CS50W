@@ -44,7 +44,6 @@ def index():
 			session["avatar_number"] = avatar_number
 			
 			create_welcome_channel()
-			# app_storage.channels["welcome"] = session["welcome_channel"]
 		
 		# onsubmit of new message
 		elif message:
@@ -54,19 +53,19 @@ def index():
 				time=str(datetime.datetime.utcnow()).split('.')[0].split(' ')[1] + ' UTC',
 				text=message)
 
-			print("current channel is" + session["current_channel"])
+			# print("current channel is" + session["current_channel"])
 			# add the message to the current channel
 			if session["current_channel"] == "welcome":
 				session["welcome_channel"].messages.append(msg)
 				session["welcome_channel"].keep_100_messages()
-				print(session["welcome_channel"].messages)
+				# print(session["welcome_channel"].messages)
 			else:
 				app_storage.channels[session["current_channel"]].messages.append(msg)
 				app_storage.channels[session["current_channel"]].keep_100_messages()
-				print(app_storage.channels[session["current_channel"]].messages)
+				# print(app_storage.channels[session["current_channel"]].messages)
 			
 			# test
-			print_data(app_storage)
+			# print_data(app_storage)
 
 			return jsonify({
 				"avatar_number": msg.avatar_number, 
@@ -83,11 +82,11 @@ def index():
 			session["current_channel_object"] = new_channel
 
 			# test
-			print_data(app_storage)
+			# print_data(app_storage)
 		
 		# on switching channels
 		elif channel_switch:
-			print(f"switched to {channel_switch}")
+			# print(f"switched to {channel_switch}")
 
 			stored_messages = []
 			
@@ -100,7 +99,7 @@ def index():
 				session["current_channel_object"] = app_storage.channels[session["current_channel"]]
 				stored_messages = app_storage.channels[session["current_channel"]].messages
 			
-			print("current channel is" + session["current_channel"], stored_messages)
+			# print("current channel is" + session["current_channel"], stored_messages)
 			
 			message_list = []
 			# turn Message objects into dicts:
@@ -112,7 +111,7 @@ def index():
 					"text": message.text})
 			
 			# test
-			print_data(app_storage)
+			# print_data(app_storage)
 
 			return jsonify({"list": message_list})
 
@@ -175,7 +174,8 @@ def user_left(data):
 		if display_name == user_object.name:
 			app_storage.users.remove(user_object)
 	# test
-	print_data(app_storage)
+	# print_data(app_storage) # error here after clearing session keeps from moving to the next line
+	
 	# emit to all clients
 	emit("delete_user", {"display_name": display_name}, broadcast=True)
 

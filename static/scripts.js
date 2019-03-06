@@ -32,15 +32,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // on socket notifications from server
   socket.on('add_new_channel', data => {
-    const li = document.createElement('li');
-    li.innerHTML = data.channel_name;
-    document.querySelector('.channels-list > ul').append(li);
+
+    document.querySelector('.channels-list > ul').insertAdjacentHTML('beforeend', 
+    `
+      <li class="channel-li">${ data.channel_name }</li>
+    `);
   });  
+
   socket.on('add_new_user', data => {
-    const li = document.createElement('li');
-    li.innerHTML = data.display_name;
-    document.querySelector('.users-list > ul').append(li);
+
+    document.querySelector('.users-list > ul').insertAdjacentHTML('beforeend', 
+    `
+      <li class="user-li">${ data.display_name }</li>
+    `);
   });
+
   socket.on('add_new_message', data => {
     
     // get the current channel name
@@ -58,12 +64,12 @@ document.addEventListener('DOMContentLoaded', () => {
       `);  
     };
 
-    keep_message_scroll_at_bottom()
+    keep_message_scroll_at_bottom();
+  });
 
-  });  
   socket.on('delete_user', data => {
 
-    document.querySelectorAll('user-li').forEach(li => {
+    document.querySelectorAll('.user-li').forEach(li => {
       if (li.innerHTML === data.display_name) {
         li.parentNode.removeChild(li);
       }
