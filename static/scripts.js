@@ -87,8 +87,8 @@ document.body.addEventListener('keydown', () => {
 function validate_display_name_onkeyup() {
   
   // validate if display name available onkeyup (mark is-valid/is-invalid)
-  var display_name = document.querySelector('#display_name');
-  var display_name_feedback = document.querySelector('#display_name_feedback');
+  const display_name = document.querySelector('#display_name');
+  const display_name_feedback = document.querySelector('#display_name_feedback');
   display_name.onkeyup = () => {
     // Get display_name value
     const name = display_name.value;
@@ -140,8 +140,8 @@ function validate_display_name_onkeyup() {
 function validate_channel_name_onkeyup() {
 
   // validate if channel name available onkeyup (mark is-valid/is-invalid)
-  var channel_name = document.querySelector('#new_channel_name');
-  var channel_name_feedback = document.querySelector('#new_channel_name_feedback');
+  const channel_name = document.querySelector('#new_channel_name');
+  const channel_name_feedback = document.querySelector('#new_channel_name_feedback');
   channel_name.onkeyup = () => {
     // Get channel_name value
     const name = channel_name.value;
@@ -336,6 +336,9 @@ function leave_flack_onclick(socket) {
 
 function validate_startform_and_emit_newuser_onsubmit(socket) {
 
+  const display_name = document.querySelector('#display_name');
+  const display_name_feedback = document.querySelector('#display_name_feedback');
+
   // verify start-form onsubmit
   document.querySelector('#start_form').onsubmit = () => {
       // temp variable
@@ -366,6 +369,9 @@ function validate_startform_and_emit_newuser_onsubmit(socket) {
 } // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 function validate_channelform_and_emit_newchannel_onsubmit(socket) {
+
+  const channel_name = document.querySelector('#new_channel_name');
+  const channel_name_feedback = document.querySelector('#new_channel_name_feedback');
 
   // verify new-channel-form onsubmit
   document.querySelector('#add_channel_form').onsubmit = () => {
